@@ -1,0 +1,151 @@
+# Anton Clew
+
+**Deterministic safety guardrails for AI-assisted coding workflows.**
+
+Anton Clew is a policy-driven CLI that evaluates file changes in a Git repository and classifies them as **ALLOW**, **NEEDS_APPROVAL**, or **DENY** based on explicit repository rules. It is designed to protect codebases in environments where AI agents or automation generate changes faster than humans can reliably review them.
+
+Unlike AI code reviewers that rely on probabilistic judgments, Anton Clew enforces **clear, test-backed rules** before changes are committed.
+
+---
+
+## Why Anton Clew Exists
+
+AI coding tools are powerful—but they are not inherently safe.
+
+As agentic workflows become more common, automation can:
+- modify sensitive files unintentionally,
+- change critical configuration without context,
+- or push large batches of code faster than meaningful human review can happen.
+
+This project was built while experimenting with agent-driven coding workflows and seeing firsthand how easy it is for automation to make fast, confident, and risky changes.
+
+Most safeguards today happen **after** changes are made.  
+Anton Clew shifts safety **left**, enforcing guardrails *before* commits land.
+
+---
+
+## The Idea
+
+Anton Clew uses **policy as code** to make repository safety explicit.
+
+Each staged file is evaluated against a YAML policy and assigned one of three outcomes:
+
+- **ALLOW**  
+  The file matches no restrictive rules and can proceed freely.
+
+- **NEEDS_APPROVAL**  
+  The file matches a pattern that requires explicit human review.
+
+- **DENY**  
+  The file matches a forbidden pattern and is blocked entirely.
+
+Decisions are deterministic and reproducible—no AI interpretation, no ambiguity.
+
+---
+
+## Features
+
+- Deterministic file classification (no hallucinations)
+- Simple YAML-based policy configuration
+- Supports exact paths, glob patterns, and nested directories
+- Prioritizes deny rules over approval rules
+- Designed for local use, hooks, and CI
+- Fully test-backed with Vitest
+- ESM-compatible Node.js CLI
+
+---
+
+## Installation
+
+```bash
+git clone https://github.com/earlgreyhot1701D/antonclew.git
+cd anton-clew
+npm install
+```
+
+---
+
+## Usage
+
+### Development Mode (recommended for first run)
+
+```bash
+npm run dev -- --help
+```
+
+### Initialize a Policy
+
+```bash
+npm run dev -- init
+```
+
+This generates a starter policy file (typically `.agentpolicy.yaml`) in the current repository.
+
+### Check Staged Files
+
+```bash
+git add .
+npm run dev -- check --staged
+```
+
+Example output:
+
+```text
+✓ README.md
+  └─ ALLOW: No restrictions apply
+
+⚠ src/core/engine.ts
+  └─ NEEDS_APPROVAL: Matches approval-required pattern: src/**
+
+✗ secrets/private.key
+  └─ DENY: Matches deny pattern: **/*.key
+```
+
+---
+
+## Example Policy
+
+```yaml
+deny_paths:
+  - "**/*.key"
+  - "**/*.pem"
+
+approval_required_paths:
+  - "src/**"
+  - "package.json"
+  - "tsconfig.json"
+```
+
+---
+
+## Where It Fits in AI Workflows
+
+Anton Clew is particularly useful when:
+
+- AI agents generate or modify code automatically
+- Commits are produced by scripts or automation
+- Teams want predictable, enforceable safeguards instead of post-hoc review
+
+---
+
+## Development Notes
+
+This project was built with assistance from **GitHub Copilot CLI** and **ChatGPT**.
+
+AI assisted. Human approved.  
+All mistakes are my own.
+
+---
+
+## Testing
+
+```bash
+npm test
+npm run build
+```
+
+---
+
+## Status
+
+Anton Clew is an MVP built for experimentation, learning, and hackathon submission.
