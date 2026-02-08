@@ -1,0 +1,11 @@
+deny_paths:
+  - ".env"
+  - "*.key"
+  - "secrets/**"
+  - ".aws/credentials"
+
+approval_required_paths:
+  - "src/**"
+  - "package.json"
+  - "tsconfig.json"
+  - ".github/**"
