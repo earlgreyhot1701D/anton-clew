@@ -61,36 +61,31 @@ Decisions are deterministic and reproducible—no AI interpretation, no ambiguit
 git clone https://github.com/earlgreyhot1701D/antonclew.git
 cd anton-clew
 npm install
-```
 
----
-
-## Usage
-
-### Development Mode (recommended for first run)
-
-```bash
+Usage
+Development Mode (recommended for first run)
 npm run dev -- --help
-```
 
-### Initialize a Policy
-
-```bash
+Initialize a Policy
 npm run dev -- init
-```
 
-This generates a starter policy file (typically `.agentpolicy.yaml`) in the current repository.
 
-### Check Staged Files
+This generates a starter policy file (typically .agentpolicy.yaml) in the current repository.
 
-```bash
+Check Staged Files
+
+Stage files as usual:
+
 git add .
+
+
+Then run:
+
 npm run dev -- check --staged
-```
+
 
 Example output:
 
-```text
 ✓ README.md
   └─ ALLOW: No restrictions apply
 
@@ -99,13 +94,11 @@ Example output:
 
 ✗ secrets/private.key
   └─ DENY: Matches deny pattern: **/*.key
-```
 
----
 
-## Example Policy
+If any files are denied or require approval, the check fails.
 
-```yaml
+Example Policy
 deny_paths:
   - "**/*.key"
   - "**/*.pem"
@@ -114,38 +107,94 @@ approval_required_paths:
   - "src/**"
   - "package.json"
   - "tsconfig.json"
-```
 
----
 
-## Where It Fits in AI Workflows
+Files matching deny_paths are blocked.
+
+Files matching approval_required_paths require human approval.
+
+All other files are allowed.
+
+Where It Fits in AI Workflows
 
 Anton Clew is particularly useful when:
 
-- AI agents generate or modify code automatically
-- Commits are produced by scripts or automation
-- Teams want predictable, enforceable safeguards instead of post-hoc review
+AI agents generate or modify code automatically
 
----
+Commits are produced by scripts or automation
 
-## Development Notes
+Teams want predictable, enforceable safeguards instead of post-hoc review
 
-This project was built with assistance from **GitHub Copilot CLI** and **ChatGPT**.
+It can be used:
 
-AI assisted. Human approved.  
+Manually before commits
+
+As a pre-commit hook
+
+In CI pipelines validating AI-generated changes
+
+Development Notes
+
+This project was built with assistance from GitHub Copilot CLI, which was used during development to:
+
+Diagnose failing Vitest test suites
+
+Resolve Node.js ESM import resolution issues
+
+Fix TypeScript build errors
+
+Apply minimal, reviewable patches during QA
+
+Copilot CLI acted as a terminal-native development assistant, not a runtime dependency.
+
+Additional reference validation and architectural discussion leveraged ChatGPT during development.
+
+Design Philosophy
+
+Determinism over vibes
+
+Explicit rules over probabilistic guesses
+
+Fail early, fail clearly
+
+Safety without slowing developers down
+
+The name Anton Clew is a quiet nod to the Silicon Valley “Son of Anton” reference—a system that calmly enforces order while other systems move fast and break things.
+
+Testing
+
+Run the test suite:
+
+npm test
+
+
+Build output:
+
+npm run build
+
+
+All core logic is covered by unit tests.
+
+Requirements
+
+Node.js 18+
+
+npm
+
+Credits
+
+Anton Clew was built using AI-assisted development tools with human oversight.
+
+GitHub Copilot CLI was used as a terminal-native assistant during debugging, testing, and incremental code fixes.
+
+ChatGPT was used for architectural discussion, problem framing, and documentation drafting.
+
+All design decisions, approvals, and final responsibility are human-made.
+
+AI assisted. Human approved.
 All mistakes are my own.
 
----
-
-## Testing
-
-```bash
-npm test
-npm run build
-```
-
----
-
-## Status
+Status
 
 Anton Clew is an MVP built for experimentation, learning, and hackathon submission.
+It is stable, tested, and intentionally minimal.
